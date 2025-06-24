@@ -14,13 +14,18 @@ const DataPointDetails: React.FC<DataPointDetailsProps> = ({ dataPoint, position
 //   const velocityRef = useRef({ x: 0, y: 0 });
   const targetPositionRef = useRef({ x: 0, y: 0 });
 
-  // Memoize tooltip dimensions to avoid recalculation
-  const tooltipConfig = useMemo(() => ({
-    width: 200,
-    height: 80,
-    offset: 15,
-    screenPadding: 20
-  }), []);
+  // Memoize tooltip dimensions with responsive sizing
+  const tooltipConfig = useMemo(() => {
+    const isMobile = window.innerWidth < 640;
+    const isTablet = window.innerWidth >= 640 && window.innerWidth < 1024;
+    
+    return {
+      width: isMobile ? 160 : isTablet ? 180 : 200,
+      height: isMobile ? 70 : isTablet ? 75 : 80,
+      offset: isMobile ? 10 : 15,
+      screenPadding: isMobile ? 10 : 20
+    };
+  }, []);
 
   // Calculate optimal position with viewport constraints
   const calculatePosition = useMemo(() => {
@@ -113,7 +118,31 @@ const DataPointDetails: React.FC<DataPointDetailsProps> = ({ dataPoint, position
     };
   }, [position, isVisible, dataPoint, calculatePosition]);
 
+  // Get responsive classes
+  const getResponsiveClasses = () => {
+    const isMobile = window.innerWidth < 640;
+    const isTablet = window.innerWidth >= 640 && window.innerWidth < 1024;
+    
+    return {
+      container: `bg-[#1a1a1a] rounded-lg shadow-xl relative focus:outline-none border-0 outline-none ${
+        isMobile ? 'p-3 w-40' : isTablet ? 'p-3.5 w-44' : 'p-4 w-48'
+      }`,
+      mainValue: `font-bold mb-1 ${
+        isMobile ? 'text-base' : isTablet ? 'text-lg' : 'text-lg'
+      }`,
+      details: `flex items-center text-gray-400 ${
+        isMobile ? 'text-xs' : isTablet ? 'text-sm' : 'text-sm'
+      }`,
+      arrow: `absolute ${
+        isMobile ? 'bottom-[-5px] left-4 w-2.5 h-2.5' : isTablet ? 'bottom-[-5px] left-5 w-2.5 h-2.5' : 'bottom-[-6px] left-6 w-3 h-3'
+      } bg-[#1a1a1a] rotate-45`,
+      text: isMobile ? 'text-xs' : 'text-xs'
+    };
+  };
+
   if (!isVisible || !dataPoint) return null;
+
+  const classes = getResponsiveClasses();
 
   return (
     <div
@@ -129,19 +158,21 @@ const DataPointDetails: React.FC<DataPointDetailsProps> = ({ dataPoint, position
         display: isVisible ? 'block' : 'none', // Force hide when not visible
       }}
     >
-      <div className="bg-[#1a1a1a] rounded-lg shadow-xl p-4 w-48 text-xs text-gray-200 relative focus:outline-none border-0 outline-none" style={{ border: 'none', outline: 'none' }}>
-        <div className="text-lg font-bold mb-1">
+      <div className={`${classes.container} text-gray-200`} style={{ border: 'none', outline: 'none' }}>
+        <div className={classes.mainValue}>
           ${Number(dataPoint.value).toLocaleString(undefined, {
-            minimumFractionDigits: 2,
+            minimumFractionDigits: window.innerWidth < 640 ? 0 : 2,
             maximumFractionDigits: 2,
           })}
         </div>
-        <div className="flex items-center text-sm text-gray-400">
-          <span className="mr-1 text-[#9acd32] pr-2">↑</span>
-          {dataPoint.displayValue}
-          <span className="ml-auto text-gray-500">?</span>
+        <div className={classes.details}>
+          <span className="mr-1 text-[#9acd32] pr-1 sm:pr-2">↑</span>
+          <span className={`${classes.text} truncate flex-1`}>
+            {dataPoint.displayValue}
+          </span>
+          <span className="ml-auto text-gray-500 text-xs">?</span>
         </div>
-        <div className="absolute bottom-[-6px] left-6 w-3 h-3 bg-[#1a1a1a] rotate-45"></div>
+        <div className={classes.arrow}></div>
       </div>
     </div>
   );

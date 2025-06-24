@@ -15,8 +15,8 @@ const Login: React.FC = () => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
-
-    //demo authentication
+    
+    // Demo authentication
     setTimeout(() => {
       if (email === 'demo@example.com' && password === 'password123') {
         navigate('/dashboard');
@@ -28,65 +28,86 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0f0f0f] flex items-center justify-center">
-      <div className="bg-[#161618] border border-[#3b3b3b] rounded-lg p-8 w-full max-w-md">
-        <div className="text-center mb-6">
-          <div className="flex items-center justify-center space-x-2 mb-4">
-            <Zap className="w-8 h-8 text-[#9acd32]" />
-            <h1 className="text-white text-2xl font-bold">Charging Dashboard</h1>
+    <div className="min-h-screen bg-[#0f0f0f] flex items-center justify-center px-4 sm:px-6 lg:px-8">
+      <div className="bg-[#161618] border border-[#3b3b3b] rounded-lg p-4 sm:p-6 lg:p-8 w-full max-w-sm sm:max-w-md lg:max-w-lg">
+        
+        {/* Header */}
+        <div className="text-center mb-4 sm:mb-6">
+          <div className="flex items-center justify-center space-x-2 mb-3 sm:mb-4">
+            <Zap className="w-6 h-6 sm:w-8 sm:h-8 text-[#9acd32]" />
+            <h1 className="text-white text-xl sm:text-2xl lg:text-3xl font-bold">
+              <span className="hidden sm:inline">Charging Dashboard</span>
+              <span className="sm:hidden">Dashboard</span>
+            </h1>
           </div>
-          <p className="text-gray-400">Sign in to your account</p>
+          <p className="text-gray-400 text-sm sm:text-base">Sign in to your account</p>
         </div>
 
+        {/* Error Message */}
         {error && (
-          <div className="mb-4">
+          <div className="mb-3 sm:mb-4">
             <ErrorMessage message={error} />
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Login Form */}
+        <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
+          
+          {/* Email Field */}
           <div>
-            <label className="block text-gray-300 text-sm mb-2">Email</label>
+            <label className="block text-gray-300 text-xs sm:text-sm mb-1 sm:mb-2">Email</label>
             <div className="relative">
               <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 bg-[#242424] border border-[#3a3a3a] rounded text-white placeholder-gray-400 focus:outline-none focus:border-[#9acd32]"
+                className="w-full pl-10 pr-4 py-2 sm:py-2.5 lg:py-3 bg-[#242424] border border-[#3a3a3a] rounded text-white placeholder-gray-400 focus:outline-none focus:border-[#9acd32] text-sm sm:text-base transition-colors"
                 placeholder="Enter your email"
                 required
               />
             </div>
           </div>
 
+          {/* Password Field */}
           <div>
-            <label className="block text-gray-300 text-sm mb-2">Password</label>
+            <label className="block text-gray-300 text-xs sm:text-sm mb-1 sm:mb-2">Password</label>
             <div className="relative">
               <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 bg-[#242424] border border-[#3a3a3a] rounded text-white placeholder-gray-400 focus:outline-none focus:border-[#9acd32]"
+                className="w-full pl-10 pr-4 py-2 sm:py-2.5 lg:py-3 bg-[#242424] border border-[#3a3a3a] rounded text-white placeholder-gray-400 focus:outline-none focus:border-[#9acd32] text-sm sm:text-base transition-colors"
                 placeholder="Enter your password"
                 required
               />
             </div>
           </div>
 
+          {/* Submit Button */}
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-[#9acd32] text-black py-2 px-4 rounded font-medium hover:bg-[#8bc34a] transition-colors disabled:opacity-50"
+            className="w-full bg-[#9acd32] text-black py-2 sm:py-2.5 lg:py-3 px-4 rounded font-medium hover:bg-[#8bc34a] transition-colors disabled:opacity-50 text-sm sm:text-base lg:text-lg mt-4 sm:mt-6"
           >
-            {isLoading ? <LoadingSpinner message="" /> : 'Sign In'}
+            {isLoading ? (
+              <div className="flex items-center justify-center">
+                <LoadingSpinner message="" />
+              </div>
+            ) : (
+              'Sign In'
+            )}
           </button>
         </form>
 
-        <div className="mt-6 text-center">
-          <p className="text-gray-400 text-sm">
-            Demo: demo@example.com / password123
+        {/* Demo Credentials */}
+        <div className="mt-4 sm:mt-6 text-center">
+          <p className="text-gray-400 text-xs sm:text-sm">
+            <span className="block sm:inline">Demo: </span>
+            <span className="font-mono text-[#9acd32] text-xs sm:text-sm">
+              demo@example.com / password123
+            </span>
           </p>
         </div>
       </div>
